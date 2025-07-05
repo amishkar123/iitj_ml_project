@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Credit Application Predictor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+    </style>
+</head>
+<body class="bg-gradient-to-br from-blue-100 to-purple-200 min-h-screen flex items-center justify-center p-4">
+    <div class="bg-white p-8 rounded-xl shadow-2xl w-full max-w-2xl">
+        <h1 class="text-3xl font-bold text-center text-gray-800 mb-8">Credit Application Predictor</h1>
+
+        <form action="/predict" method="post" class="space-y-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Age -->
+                <div>
+                    <label for="age" class="block text-sm font-medium text-gray-700">Age:</label>
+                    <input type="number" id="age" name="age" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="18" max="100" value="35">
+                </div>
+                <!-- Income -->
+                <div>
+                    <label for="income" class="block text-sm font-medium text-gray-700">Annual Income ($):</label>
+                    <input type="number" id="income" name="income" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="0" value="75000">
+                </div>
+                <!-- Credit Score -->
+                <div>
+                    <label for="credit_score" class="block text-sm font-medium text-gray-700">Credit Score (300-850):</label>
+                    <input type="number" id="credit_score" name="credit_score" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="300" max="850" value="720">
+                </div>
+                <!-- Loan Amount Requested -->
+                <div>
+                    <label for="loan_amount_requested" class="block text-sm font-medium text-gray-700">Loan Amount Requested ($):</label>
+                    <input type="number" id="loan_amount_requested" name="loan_amount_requested" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="1000" value="20000">
+                </div>
+                <!-- Employment Status -->
+                <div>
+                    <label for="employment_status" class="block text-sm font-medium text-gray-700">Employment Status:</label>
+                    <select id="employment_status" name="employment_status" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="Employed">Employed</option>
+                        <option value="Self-Employed">Self-Employed</option>
+                        <option value="Unemployed">Unemployed</option>
+                        <option value="Retired">Retired</option>
+                    </select>
+                </div>
+                <!-- Years at Current Job -->
+                <div>
+                    <label for="years_at_job" class="block text-sm font-medium text-gray-700">Years at Current Job:</label>
+                    <input type="number" id="years_at_job" name="years_at_job" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="0" value="5">
+                </div>
+                <!-- Existing Debt -->
+                <div>
+                    <label for="existing_debt" class="block text-sm font-medium text-gray-700">Total Existing Debt ($):</label>
+                    <input type="number" id="existing_debt" name="existing_debt" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="0" value="10000">
+                </div>
+                <!-- Number of Credit Accounts -->
+                <div>
+                    <label for="num_credit_accounts" class="block text-sm font-medium text-gray-700">Number of Credit Accounts:</label>
+                    <input type="number" id="num_credit_accounts" name="num_credit_accounts" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="1" value="3">
+                </div>
+                <!-- Delinquencies in 2 Years -->
+                <div>
+                    <label for="delinquencies" class="block text-sm font-medium text-gray-700">Delinquencies in Last 2 Years:</label>
+                    <input type="number" id="delinquencies" name="delinquencies" required
+                           class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                           min="0" value="0">
+                </div>
+                <!-- Loan Purpose -->
+                <div>
+                    <label for="loan_purpose" class="block text-sm font-medium text-gray-700">Loan Purpose:</label>
+                    <select id="loan_purpose" name="loan_purpose" required
+                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm">
+                        <option value="Home">Home</option>
+                        <option value="Car">Car</option>
+                        <option value="Debt Consolidation">Debt Consolidation</option>
+                        <option value="Education">Education</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="flex justify-center mt-8">
+                <button type="submit"
+                        class="px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition duration-300 ease-in-out">
+                    Predict Acceptance
+                </button>
+            </div>
+        </form>
+
+        <!-- Prediction Result Display -->
+        {% if prediction_text %}
+        <div class="mt-8 p-6 bg-blue-50 rounded-lg shadow-inner text-center">
+            <h2 class="text-2xl font-semibold text-blue-800">{{ prediction_text }}</h2>
+            {% if probability %}
+            <p class="text-lg text-blue-700 mt-2">{{ probability }}</p>
+            {% endif %}
+        </div>
+        {% endif %}
+    </div>
+</body>
+</html>
