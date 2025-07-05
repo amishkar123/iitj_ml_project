@@ -6,9 +6,6 @@ from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_sc
 import joblib # Import joblib for saving/loading models
 
 # --- 1. Data Generation ---
-# Create a synthetic dataset for credit application prediction
-# This dataset will mimic typical features found in credit applications.
-
 np.random.seed(42) # for reproducibility
 
 num_applicants = 1000
@@ -29,19 +26,17 @@ data = {
 df = pd.DataFrame(data)
 
 # Create a synthetic 'Acceptance_Status' target variable
-# This is a simplified logic to generate a target that somewhat correlates with features.
-# Higher credit score, higher income, lower loan amount, lower debt, and stable employment
-# generally lead to higher acceptance probability.
-
+# *** ADJUSTED LOGIC FOR STRONGER BIAS TOWARDS ACCEPTANCE ***
 df['Acceptance_Probability'] = (
-    0.3 * (df['Credit_Score'] / 850) +
-    0.2 * (df['Income'] / 150000) -
-    0.2 * (df['Loan_Amount_Requested'] / 50000) -
-    0.1 * (df['Existing_Debt'] / 30000) +
-    0.1 * (df['Years_at_Current_Job'] / 20)
+    0.5 * (df['Credit_Score'] / 850) +        # Increased weight for good credit score
+    0.4 * (df['Income'] / 150000) -          # Increased weight for income
+    0.1 * (df['Loan_Amount_Requested'] / 50000) - # Significantly reduced negative weight
+    0.02 * (df['Existing_Debt'] / 30000) +   # Further reduced negative weight for debt
+    0.15 * (df['Years_at_Current_Job'] / 20) + # Slightly increased positive weight
+    0.1 # Added a constant positive bias to shift probabilities upwards
 )
-# Add some randomness
-df['Acceptance_Probability'] = df['Acceptance_Probability'] + np.random.rand(num_applicants) * 0.2 - 0.1
+# Add some randomness, centered around 0
+df['Acceptance_Probability'] = df['Acceptance_Probability'] + np.random.rand(num_applicants) * 0.1 - 0.05 # Reduced randomness
 
 # Convert probability to binary acceptance status (e.g., threshold at 0.5)
 df['Acceptance_Status'] = (df['Acceptance_Probability'] > 0.5).astype(int)
@@ -56,20 +51,26 @@ df.info()
 print("\n--- Acceptance Status Distribution ---")
 print(df['Acceptance_Status'].value_counts(normalize=True))
 
-# --- 2. Data Preprocessing ---
+# --- 2. Data Preprocessing & Feature Engineering (Combined for consistency) ---
 
 # Separate features (X) and target (y)
 X = df.drop('Acceptance_Status', axis=1)
 y = df['Acceptance_Status']
 
+# --- Feature Engineering: Apply BEFORE one-hot encoding ---
+X['Debt_to_Income_Ratio'] = X['Existing_Debt'] / (X['Income'] + 1e-6)
+X['Loan_to_Income_Ratio'] = X['Loan_Amount_Requested'] / (X['Income'] + 1e-6)
+
 # Identify categorical features for one-hot encoding
+# Ensure this list is consistent with ORIGINAL_CATEGORICAL_FEATURES in app.py
 categorical_features = X.select_dtypes(include=['object']).columns
 numerical_features = X.select_dtypes(include=np.number).columns
 
 # Apply One-Hot Encoding to categorical features
+# drop_first=True is important for consistent behavior with Flask app
 X = pd.get_dummies(X, columns=categorical_features, drop_first=True)
 
-print("\n--- Features after One-Hot Encoding Head ---")
+print("\n--- Features after Feature Engineering and One-Hot Encoding Head ---")
 print(X.head())
 print("\n--- Features Info after Encoding ---")
 X.info()
@@ -83,7 +84,6 @@ print(f"Testing set size: {X_test.shape[0]} samples")
 # --- 3. Model Selection and Training (Gradient Boosting) ---
 
 # Initialize the Gradient Boosting Classifier
-# Parameters can be tuned for better performance (e.g., n_estimators, learning_rate, max_depth)
 model = GradientBoostingClassifier(n_estimators=100, learning_rate=0.1, max_depth=3, random_state=42)
 
 # Train the model
@@ -121,7 +121,7 @@ feature_importances = pd.Series(model.feature_importances_, index=X.columns).sor
 print("\n--- Top 10 Feature Importances ---")
 print(feature_importances.head(10))
 
-# --- NEW: Save the trained model and feature columns ---
+# --- Save the trained model and feature columns ---
 model_filename = 'gradient_boosting_model.joblib'
 feature_columns_filename = 'model_features.joblib'
 
