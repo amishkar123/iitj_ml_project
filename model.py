@@ -3,10 +3,10 @@ import numpy as np
 from sklearn.model_selection import train_test_split
 from sklearn.ensemble import GradientBoostingClassifier
 from sklearn.metrics import accuracy_score, precision_score, recall_score, f1_score, roc_auc_score, confusion_matrix
-import joblib # Import joblib for saving/loading models
+import joblib 
 
 # --- 1. Data Generation ---
-np.random.seed(42) # for reproducibility
+np.random.seed(42)
 
 num_applicants = 1000
 
@@ -26,14 +26,13 @@ data = {
 df = pd.DataFrame(data)
 
 # Create a synthetic 'Acceptance_Status' target variable
-# *** ADJUSTED LOGIC FOR STRONGER BIAS TOWARDS ACCEPTANCE ***
 df['Acceptance_Probability'] = (
-    0.5 * (df['Credit_Score'] / 850) +        # Increased weight for good credit score
-    0.4 * (df['Income'] / 150000) -          # Increased weight for income
-    0.1 * (df['Loan_Amount_Requested'] / 50000) - # Significantly reduced negative weight
-    0.02 * (df['Existing_Debt'] / 30000) +   # Further reduced negative weight for debt
-    0.15 * (df['Years_at_Current_Job'] / 20) + # Slightly increased positive weight
-    0.1 # Added a constant positive bias to shift probabilities upwards
+    0.5 * (df['Credit_Score'] / 850) +       
+    0.4 * (df['Income'] / 150000) -          
+    0.1 * (df['Loan_Amount_Requested'] / 50000) - 
+    0.02 * (df['Existing_Debt'] / 30000) + 
+    0.15 * (df['Years_at_Current_Job'] / 20)
+    
 )
 # Add some randomness, centered around 0
 df['Acceptance_Probability'] = df['Acceptance_Probability'] + np.random.rand(num_applicants) * 0.1 - 0.05 # Reduced randomness
@@ -62,12 +61,10 @@ X['Debt_to_Income_Ratio'] = X['Existing_Debt'] / (X['Income'] + 1e-6)
 X['Loan_to_Income_Ratio'] = X['Loan_Amount_Requested'] / (X['Income'] + 1e-6)
 
 # Identify categorical features for one-hot encoding
-# Ensure this list is consistent with ORIGINAL_CATEGORICAL_FEATURES in app.py
 categorical_features = X.select_dtypes(include=['object']).columns
 numerical_features = X.select_dtypes(include=np.number).columns
 
 # Apply One-Hot Encoding to categorical features
-# drop_first=True is important for consistent behavior with Flask app
 X = pd.get_dummies(X, columns=categorical_features, drop_first=True)
 
 print("\n--- Features after Feature Engineering and One-Hot Encoding Head ---")
@@ -95,7 +92,7 @@ print("Model training complete.")
 
 # Predict on the test set
 y_pred = model.predict(X_test)
-y_pred_proba = model.predict_proba(X_test)[:, 1] # Probability of the positive class (acceptance)
+y_pred_proba = model.predict_proba(X_test)[:, 1]
 
 # Calculate evaluation metrics
 accuracy = accuracy_score(y_test, y_pred)
@@ -126,7 +123,7 @@ model_filename = 'gradient_boosting_model.joblib'
 feature_columns_filename = 'model_features.joblib'
 
 joblib.dump(model, model_filename)
-joblib.dump(X.columns.tolist(), feature_columns_filename) # Save as a list for easier loading
+joblib.dump(X.columns.tolist(), feature_columns_filename)
 
 print(f"\nModel saved to {model_filename}")
 print(f"Feature columns saved to {feature_columns_filename}")

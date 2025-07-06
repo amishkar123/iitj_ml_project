@@ -23,28 +23,28 @@
                     <label for="age" class="block text-sm font-medium text-gray-700">Age:</label>
                     <input type="number" id="age" name="age" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="18" max="100" value="35">
+                           min="18" max="100" value="{{ request.form.get('age', '35') }}">
                 </div>
                 <!-- Income -->
                 <div>
                     <label for="income" class="block text-sm font-medium text-gray-700">Annual Income ($):</label>
                     <input type="number" id="income" name="income" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="0" value="75000">
+                           min="0" value="{{ request.form.get('income', '75000') }}">
                 </div>
                 <!-- Credit Score -->
                 <div>
                     <label for="credit_score" class="block text-sm font-medium text-gray-700">Credit Score (300-850):</label>
                     <input type="number" id="credit_score" name="credit_score" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="300" max="850" value="720">
+                           min="300" max="850" value="{{ request.form.get('credit_score', '720') }}">
                 </div>
                 <!-- Loan Amount Requested -->
                 <div>
                     <label for="loan_amount_requested" class="block text-sm font-medium text-gray-700">Loan Amount Requested ($):</label>
                     <input type="number" id="loan_amount_requested" name="loan_amount_requested" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="1000" value="20000">
+                           min="1000" value="{{ request.form.get('loan_amount_requested', '20000') }}">
                 </div>
                 <!-- Employment Status -->
                 <div>
@@ -62,28 +62,28 @@
                     <label for="years_at_job" class="block text-sm font-medium text-gray-700">Years at Current Job:</label>
                     <input type="number" id="years_at_job" name="years_at_job" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="0" value="5">
+                           min="0" value="{{ request.form.get('years_at_job', '5') }}">
                 </div>
                 <!-- Existing Debt -->
                 <div>
                     <label for="existing_debt" class="block text-sm font-medium text-gray-700">Total Existing Debt ($):</label>
                     <input type="number" id="existing_debt" name="existing_debt" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="0" value="10000">
+                           min="0" value="{{ request.form.get('existing_debt', '10000') }}">
                 </div>
                 <!-- Number of Credit Accounts -->
                 <div>
                     <label for="num_credit_accounts" class="block text-sm font-medium text-gray-700">Number of Credit Accounts:</label>
                     <input type="number" id="num_credit_accounts" name="num_credit_accounts" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="1" value="3">
+                           min="1" value="{{ request.form.get('num_credit_accounts', '3') }}">
                 </div>
                 <!-- Delinquencies in 2 Years -->
                 <div>
                     <label for="delinquencies" class="block text-sm font-medium text-gray-700">Delinquencies in Last 2 Years:</label>
                     <input type="number" id="delinquencies" name="delinquencies" required
                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
-                           min="0" value="0">
+                           min="0" value="{{ request.form.get('delinquencies', '0') }}">
                 </div>
                 <!-- Loan Purpose -->
                 <div>
